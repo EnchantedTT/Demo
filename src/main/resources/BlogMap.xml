@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo3.mapper.BlogMapper">
+    <select id="dynamicIfTest1" parameterType="com.demo3.model.Blog" resultType="com.demo3.model.Blog">
+        select * from blog where num = 5
+        <if test="title != null">
+            and title = #{title}
+        </if>
+        <if test="content != null">
+            and content = #{content}
+        </if>
+        <if test="owner != null">
+            and owner = #{owner}
+        </if>
+    </select>
+
+
+    <select id="dynamicChooseTest" parameterType="com.demo3.model.Blog" resultType="com.demo3.model.Blog">
+        select * from blog where num = 5
+        <choose>
+            <when test="title != null">
+                and title = #{title}
+            </when>
+            <when test="content != null">
+                and content = #{content}
+            </when>
+            <otherwise>
+                and owner = "e"
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="dynamicWhereTest" parameterType="com.demo3.model.Blog" resultType="com.demo3.model.Blog">
+        select * from blog
+        <where>
+            <if test="title != null">
+                title = #{title}
+            </if>
+            <if test="content != null">
+                or content = #{content}
+            </if>
+            <if test="owner != null">
+                or owner = #{owner}
+            </if>
+        </where>
+    </select>
+
+    <update id="dynamicSetTest" parameterType="com.demo3.model.Blog">
+        update blog
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="owner != null">
+                owner = #{owner}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="dynamicForeachTest" resultType="com.demo3.model.Blog">
+        select * from blog where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <select id="dynamicForeach3Test" resultType="com.demo3.model.Blog">
+        select * from blog where title like "%"#{title}"%" and id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>
